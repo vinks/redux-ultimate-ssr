@@ -59,7 +59,7 @@
       "beforeLineComment": true
     }],
     "lines-around-directive": ["error"],
-    "new-cap": ["error"],
+    "new-cap": ["error", { "properties": false }],
     "newline-after-var": ["error"],
     "newline-before-return": ["error"],
     "new-parens": ["error"],
@@ -92,7 +92,7 @@
     "prefer-arrow-callback": ["error"],
     "prefer-spread": ["error"],
     "prefer-template": ["error"],
-    "quotes": ["error", "single"],
+    "quotes": ["error", "single", { "avoidEscape": true }],
     "quote-props": ["error", "as-needed"],
     "react/display-name": ["off"],
     "react/prop-types": ["off"],

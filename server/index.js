@@ -7,11 +7,15 @@ import hpp from 'hpp'
 import compression from 'compression'
 import favicon from 'serve-favicon'
 
+import jsend from './middlewares/jsend'
 import ssr from './middlewares/ssr'
 import ssrDev from './middlewares/ssr.dev'
 import { port, host } from './config'
+import routes from './routes'
 
 const app = express()
+
+app.use(jsend())
 
 // Using helmet to secure Express with various HTTP headers
 app.use(helmet())
@@ -34,10 +38,21 @@ app.use(express.static(path.join(process.cwd(), './build/public')))
 // Run express as webpack dev server
 if (__DEV__) {
   const hotServer = require('./middlewares/hot')
+  const { knex } = require('../orm')
+  const knexLogger = require('./middlewares/knex-logger')
 
   hotServer(app)
+
+  app.use(knexLogger(knex))
+
+  // Include server routes as a middleware
+  app.use('/api', (req, res, next) => {
+    require('./routes').default(req, res, next)
+  })
+
   app.use(ssrDev)
 } else {
+  app.use(routes)
   app.use(ssr)
 }
 

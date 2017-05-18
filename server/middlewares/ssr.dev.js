@@ -7,7 +7,7 @@ import routes from '../../client/routes'
 import Html from '../markup/Html'
 import { store } from '../../client/misc'
 
-function ssr(req, res) {
+export default function(req, res) {
   const App = require('../../client/layouts/App').default
 
   webpackIsomorphicTools.refresh()
@@ -76,5 +76,3 @@ function ssr(req, res) {
       console.error(`==> 😭  Rendering routes error: ${err}`)
     })
 }
-
-export default ssr

@@ -1,7 +1,7 @@
 export default class ExampleApi {
   constructor(apiCore) {
     this.API = apiCore
-    this.path = 'https://jsonplaceholder.typicode.com/users'
+    this.path = 'http://localhost:3000/api/example'
   }
 
   setPath(path) {

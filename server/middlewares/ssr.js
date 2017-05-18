@@ -8,7 +8,7 @@ import Html from '../markup/Html'
 import App from '../../client/layouts/App'
 import { store } from '../../client/misc'
 
-function ssr(req, res) {
+export default function(req, res) {
   const renderHtml = (store, htmlContent) => {
     const html = renderToStaticMarkup(
       <Html store={store} htmlContent={htmlContent} />
@@ -73,5 +73,3 @@ function ssr(req, res) {
       console.error(`==> 😭  Rendering routes error: ${err}`)
     })
 }
-
-export default ssr

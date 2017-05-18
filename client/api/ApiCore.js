@@ -14,25 +14,25 @@ export default class ApiCore {
 
   delete(urlPath) {
     return this._AXIOS.delete(urlPath)
-      .then(res => res.data)
+      .then(res => makeResponse(res.data))
       .catch(cleanErrors)
   }
 
   get(urlPath, params) {
     return this._AXIOS.get(urlPath, { params })
-      .then(res => res.data)
+      .then(res => makeResponse(res.data))
       .catch(cleanErrors)
   }
 
   post(urlPath, data) {
     return this._AXIOS.post(urlPath, data)
-      .then(res => res.data)
+      .then(res => makeResponse(res.data))
       .catch(cleanErrors)
   }
 
   put(urlPath, data) {
     return this._AXIOS.put(urlPath, data)
-      .then(res => res.data)
+      .then(res => makeResponse(res.data))
       .catch(cleanErrors)
   }
 }
@@ -73,6 +73,14 @@ function generateAxiosInstance() {
   })
 
   return axiosInstance
+}
+
+function makeResponse(resData) {
+  if (resData.status === 'success') {
+    return resData.data
+  }
+
+  cleanErrors(new Error(resData.message))
 }
 
 function cleanErrors(error) {

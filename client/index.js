@@ -18,7 +18,7 @@ const renderApp = () => {
         </ConnectedRouter>
       </Provider>
     </AppContainer>,
-    mountNode,
+    mountNode
   )
 }
 
