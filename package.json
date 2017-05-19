@@ -1,7 +1,7 @@
 {
   "name": "redux-ultimate",
   "version": "1.0.0",
-  "description": "",
+  "description": "A complex starter react boilerplate for an universal web application with express api backend and server side render.",
   "main": "index.js",
   "scripts": {
     "start": "better-npm-run start",
