@@ -19,9 +19,12 @@
     "lint:style": "better-npm-run lint:style",
     "test": "better-npm-run test",
     "knex": "knex",
-    "migrate:latest": "knex migrate:latest",
-    "migrate:rollback": "knex migrate:rollback",
-    "seed": "knex seed:run"
+    "migrate": "better-npm-run migrate",
+    "migrate:prod": "better-npm-run migrate:prod",
+    "rollback": "better-npm-run rollback",
+    "rollback:prod": "better-npm-run rollback:prod",
+    "seed": "better-npm-run seed",
+    "seed:prod": "better-npm-run seed:prod"
   },
   "author": "",
   "license": "ISC",
@@ -43,13 +46,13 @@
       }
     },
     "build:client": {
-      "command": "webpack --progress --hide-modules --config ./tools/webpack/webpack.client.babel.js",
+      "command": "webpack --hide-modules --config ./tools/webpack/webpack.client.babel.js",
       "env": {
         "NODE_ENV": "production"
       }
     },
     "build:server": {
-      "command": "webpack --progress --hide-modules --config ./tools/webpack/webpack.server.babel.js"
+      "command": "webpack --hide-modules --config ./tools/webpack/webpack.server.babel.js"
     },
     "clean:client": {
       "command": "rimraf ./build/public/assets"
@@ -71,6 +74,33 @@
       "env": {
         "NODE_ENV": "test"
       }
+    },
+    "migrate": {
+      "command": "knex migrate:latest"
+    },
+    "migrate:prod": {
+      "command": "knex migrate:latest",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "rollback": {
+      "command": "knex migrate:rollback"
+    },
+    "rollback:prod": {
+      "command": "knex migrate:rollback",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "seed": {
+      "command": "knex seed:run"
+    },
+    "seed:prod": {
+      "command": "knex seed:run",
+      "env": {
+        "NODE_ENV": "production"
+      }
     }
   },
   "browserslist": [
@@ -78,6 +108,10 @@
     "not ie <= 8"
   ],
   "jest": {
+    "globals": {
+      "__CLIENT__": true,
+      "__DEV__": false
+    },
     "collectCoverageFrom": [
       "client/layouts/**/*.js",
       "client/containers/**/*.js",

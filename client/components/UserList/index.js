@@ -5,7 +5,7 @@ import styles from './styles.scss'
 
 const UserList = ({ list }) => (
   <div className={styles.UserList}>
-    <h1>User List</h1>
+    <h4>User List</h4>
     <ul>
       {list.map(user => (
         <li key={user.id}>

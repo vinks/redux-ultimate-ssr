@@ -1,12 +1,12 @@
 @import '../../theme/variables';
 
 body {
-  background-color: $color-dark-gray;
+  background-color: $color-gray;
   font-family: 'Helvetica-Light', Helvetica, Arial, sans-serif;
 }
 
 .App {
-  color: $color-white;
+  color: $color-black;
 
   .header {
     overflow: auto;

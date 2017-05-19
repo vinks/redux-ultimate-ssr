@@ -5,6 +5,8 @@ const webpack = require('webpack')
 const nodeExternals = require('webpack-node-externals')
 const { CSSModules, eslint } = require('./config')
 
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
+
 module.exports = {
   name: 'server',
   target: 'node',
@@ -55,6 +57,8 @@ module.exports = {
     }]
   },
   plugins: [
+    new ProgressBarPlugin(),
+
     // Setup global variables for server
     new webpack.LoaderOptionsPlugin({
       options: {

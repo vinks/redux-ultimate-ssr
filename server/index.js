@@ -9,7 +9,6 @@ import favicon from 'serve-favicon'
 
 import jsend from './middlewares/jsend'
 import ssr from './middlewares/ssr'
-import ssrDev from './middlewares/ssr.dev'
 import { port, host } from './config'
 import routes from './routes'
 
@@ -45,14 +44,17 @@ if (__DEV__) {
 
   app.use(knexLogger(knex))
 
-  // Include server routes as a middleware
+  // Require server routes as a middleware
   app.use('/api', (req, res, next) => {
     require('./routes').default(req, res, next)
   })
 
-  app.use(ssrDev)
+  // Require server render middleware
+  app.use('*', (req, res, next) => {
+    require('./middlewares/ssr.dev').default(req, res, next)
+  })
 } else {
-  app.use(routes)
+  app.use('/api', routes)
   app.use(ssr)
 }
 

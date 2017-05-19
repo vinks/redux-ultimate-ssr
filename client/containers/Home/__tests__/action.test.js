@@ -19,7 +19,10 @@ axios.apiCore.setAdapter(httpAdapter)
 const mockStore = configureMockStore([thunk])
 
 describe('fetch users data', () => {
-  const response = [{ id: '1', name: 'Welly' }]
+  const response = {
+    status: 'success',
+    data: [{ id: '1', name: 'Welly' }]
+  }
   const errorMessage = 'Request failed with status code 500'
 
   afterEach(() => {
@@ -33,7 +36,7 @@ describe('fetch users data', () => {
 
     const expectedActions = [
       { type: USERS_REQUESTING },
-      { type: USERS_SUCCESS, data: response }
+      { type: USERS_SUCCESS, data: response.data }
     ]
     const store = mockStore({ list: null })
 

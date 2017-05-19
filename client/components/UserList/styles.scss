@@ -1,7 +1,7 @@
 @import '../../theme/variables';
 
 .UserList {
-  color: $color-white;
+  color: $color-black;
 
   ul {
     padding-left: 17px;
@@ -12,6 +12,6 @@
   }
 
   a {
-    color: $color-white;
+    color: $color-black;
   }
 }

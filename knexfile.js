@@ -15,17 +15,6 @@ module.exports = {
     shemaName: 'public'
   },
 
-  test: {
-    client: 'pg',
-    connection: 'postgres://postgres:@localhost/exampledb_test',
-    migrations: {
-      directory: path.join(__dirname, 'db/migrations')
-    },
-    seeds: {
-      directory: path.join(__dirname, 'db/seeds')
-    }
-  },
-
   production: {
     client: 'pg',
     connection: 'postgres://postgres:@localhost/exampledb_prod',

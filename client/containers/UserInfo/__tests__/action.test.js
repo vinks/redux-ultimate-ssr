@@ -21,10 +21,13 @@ const mockStore = configureMockStore([thunk])
 describe('fetch user data', () => {
   const userId = 'test'
   const response = {
-    name: 'Welly',
-    phone: '007',
-    email: 'test@gmail.com',
-    website: 'www.test.com'
+    status: 'success',
+    data: {
+      name: 'Welly',
+      phone: '007',
+      email: 'test@gmail.com',
+      website: 'www.test.com'
+    }
   }
   const errorMessage = 'Request failed with status code 500'
 
@@ -39,7 +42,7 @@ describe('fetch user data', () => {
 
     const expectedActions = [
       { type: USER_REQUESTING, userId },
-      { type: USER_SUCCESS, userId, data: response }
+      { type: USER_SUCCESS, userId, data: response.data }
     ]
     const store = mockStore({ info: null })
 

@@ -10,7 +10,7 @@ exports[`<UserList /> renders 1`] = `
   <ul>
     <li>
       <a
-        href="/UserInfo/1"
+        href="/userinfo/1"
         onClick={[Function]}
       >
         Welly

@@ -8,6 +8,7 @@ import Html from '../markup/Html'
 import { store } from '../../client/misc'
 
 export default function(req, res) {
+  // We need require app in each request for hot server updates
   const App = require('../../client/layouts/App').default
 
   webpackIsomorphicTools.refresh()

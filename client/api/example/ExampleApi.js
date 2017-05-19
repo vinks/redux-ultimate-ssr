@@ -1,7 +1,9 @@
+import config from '../../config'
+
 export default class ExampleApi {
   constructor(apiCore) {
     this.API = apiCore
-    this.path = 'http://localhost:3000/api/example'
+    this.path = `${config.apiUrl}/example`
   }
 
   setPath(path) {
