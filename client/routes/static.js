@@ -1,2 +1,7 @@
-export { default as Home } from '../containers/Home'
-export { default as UserInfo } from '../containers/UserInfo'
+import Home from '../containers/Home'
+import UserInfo from '../containers/UserInfo'
+
+export default {
+  Home,
+  UserInfo
+}
