@@ -1,5 +1,7 @@
 import React from 'react'
 import { renderToString, renderToStaticMarkup } from 'react-dom/server'
+import { AsyncComponentProvider, createAsyncContext } from 'react-async-component' // 👈
+import asyncBootstrapper from 'react-async-bootstrapper'
 import { StaticRouter } from 'react-router-dom'
 import { matchRoutes } from 'react-router-config'
 import { Provider } from 'react-redux'
@@ -9,9 +11,13 @@ import App from '../../client/layouts/App'
 import { store } from '../../client/misc'
 
 export default function(req, res) {
-  const renderHtml = (store, htmlContent) => {
+  const renderHtml = (store, htmlContent, asyncState) => {
     const html = renderToStaticMarkup(
-      <Html store={store} htmlContent={htmlContent} />
+      <Html
+        store={store}
+        htmlContent={htmlContent}
+        asyncState={asyncState}
+      />
     )
 
     return `<!doctype html>${html}`
@@ -45,12 +51,19 @@ export default function(req, res) {
     .then(() => {
       // Setup React-Router server-side rendering
       const routerContext = {}
-      const htmlContent = renderToString(
-        <Provider store={store}>
-          <StaticRouter location={req.url} context={routerContext}>
-            <App />
-          </StaticRouter>
-        </Provider>
+
+      // Create the async context for our provider, this grants
+      // us the ability to tap into the state to send back to the client.
+      const asyncContext = createAsyncContext()
+
+      const app = (
+        <AsyncComponentProvider asyncContext={asyncContext}>
+          <Provider store={store}>
+            <StaticRouter location={req.url} context={routerContext}>
+              <App />
+            </StaticRouter>
+          </Provider>
+        </AsyncComponentProvider>
       )
 
       // Check if the render result contains a redirect, if so we need to set
@@ -65,8 +78,16 @@ export default function(req, res) {
       // Checking is page is 404
       const status = routerContext.status === '404' ? 404 : 200
 
-      // Pass the route and initial state into html template
-      res.status(status).send(renderHtml(store, htmlContent))
+      asyncBootstrapper(app).then(() => {
+        // We can now render our app
+        const appString = renderToString(app)
+
+        // Get the async component state
+        const asyncState = asyncContext.getState()
+
+        // Pass the route and initial state into html template
+        res.status(status).send(renderHtml(store, appString, asyncState))
+      })
     })
     .catch(err => {
       res.status(404).send('Not Found :(')

@@ -13,9 +13,12 @@ export default function(req, res) {
 
   webpackIsomorphicTools.refresh()
 
-  const renderHtml = (store, htmlContent) => {
+  const renderHtml = (store, appString) => {
     const html = renderToStaticMarkup(
-      <Html store={store} htmlContent={htmlContent} />
+      <Html
+        store={store}
+        appString={appString}
+      />
     )
 
     return `<!doctype html>${html}`
@@ -49,7 +52,8 @@ export default function(req, res) {
     .then(() => {
       // Setup React-Router server-side rendering
       const routerContext = {}
-      const htmlContent = renderToString(
+
+      const app = (
         <Provider store={store}>
           <StaticRouter location={req.url} context={routerContext}>
             <App />
@@ -69,8 +73,11 @@ export default function(req, res) {
       // Checking is page is 404
       const status = routerContext.status === '404' ? 404 : 200
 
+      // We can now render our app
+      const appString = renderToString(app)
+
       // Pass the route and initial state into html template
-      res.status(status).send(renderHtml(store, htmlContent))
+      res.status(status).send(renderHtml(store, appString))
     })
     .catch(err => {
       res.status(404).send('Not Found :(')

@@ -101,13 +101,13 @@ const getEntry = () => {
     'babel-polyfill',   // Support promise for IE browser (for dev)
     'react-hot-loader/patch',
     'webpack-hot-middleware/client?reload=true',
-    './client/index.js'
+    './client/client.dev.js'
   ]
 
   // For prodcution
   if (!isDev) {
     entry = {
-      main: './client/index.js',
+      main: './client/client.js',
       vendor // Register vendors here
     }
   }

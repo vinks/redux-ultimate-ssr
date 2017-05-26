@@ -5,7 +5,7 @@ import Helmet from 'react-helmet'
 import serialize from 'serialize-javascript'
 import _ from 'lodash'
 
-const Html = ({ store, htmlContent }) => {
+const Html = ({ store, appString, asyncState }) => {
   // Should be declared after "renderToStaticMarkup()" of "../server.js" or it won't work
   const head = Helmet.renderStatic()
   const attrs = head.htmlAttributes.toComponent()
@@ -41,13 +41,20 @@ const Html = ({ store, htmlContent }) => {
         {/* Rendering the route, which passed from server-side */}
         <div
           id="react-view"
-          dangerouslySetInnerHTML={{ __html: htmlContent || '' }}
+          dangerouslySetInnerHTML={{ __html: appString || '' }}
         />
 
         {/* Store the initial state into window */}
         <script
           dangerouslySetInnerHTML={{
             __html: store && `window.__INITIAL_STATE__=${serialize(store.getState())};`
+          }}
+        />
+
+        {/* Serialise the async state into the HTML response */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: asyncState && `window.ASYNC_COMPONENTS_STATE=${serialize(asyncState)};`
           }}
         />
 
