@@ -14,6 +14,8 @@ import routes from './routes'
 
 const app = express()
 
+// Use jsend in api responses
+// https://labs.omniti.com/labs/jsend
 app.use(jsend())
 
 // Using helmet to secure Express with various HTTP headers
@@ -42,6 +44,7 @@ if (__DEV__) {
 
   hotServer(app)
 
+  // Log sql queries
   app.use(knexLogger(knex))
 
   // Require server routes as a middleware

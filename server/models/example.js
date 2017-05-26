@@ -12,14 +12,10 @@ class Example extends Model {
 
 }
 
-Example.getAll = function() {
-  return this.query()
-}
+Example.getAll = () => Example.query()
 
-Example.getById = function(id) {
-  return this.query()
-    .where('id', id)
-    .first()
-}
+Example.getById = id => Example.query()
+  .where('id', id)
+  .first()
 
 export default Example
