@@ -11,11 +11,11 @@ import App from '../../client/layouts/App'
 import { store } from '../../client/misc'
 
 export default function(req, res) {
-  const renderHtml = (store, htmlContent, asyncState) => {
+  const renderHtml = (store, appString, asyncState) => {
     const html = renderToStaticMarkup(
       <Html
         store={store}
-        htmlContent={htmlContent}
+        appString={appString}
         asyncState={asyncState}
       />
     )
