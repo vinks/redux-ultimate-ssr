@@ -2,7 +2,7 @@
 
 Starter boilerplate for creating your own  [universal](https://medium.com/@mjackson/universal-javascript-4761051b7ae9#.mtjf14xy5) complex app with backend api. It built on the top of [Node.js](https://nodejs.org/en/), [Express](https://expressjs.com/),
 [Knex](http://knexjs.org/),
-[Objection](http://vincit.github.io/objection.js/), [React](https://facebook.github.io/react/), [Redux](https://github.com/reactjs/redux) and [React Router v4](https://reacttraining.com/react-router/). Includes all the hot stuff and modern web development tools such as [Webpack 2](https://webpack.js.org/), [Babel](https://babeljs.io/), [PostCSS](https://github.com/postcss/postcss-loader), [React Hot Loader 3](https://github.com/gaearon/react-hot-loader) and [Redux Devtools Extension](https://github.com/zalmoxisus/redux-devtools-extension).
+[Objection](http://vincit.github.io/objection.js/), [React](https://facebook.github.io/react/), [Redux](https://github.com/reactjs/redux), [React Async Component](https://github.com/ctrlplusb/react-async-component) and [React Router v4](https://reacttraining.com/react-router/). Includes all the hot stuff and modern web development tools such as [Webpack 2](https://webpack.js.org/), [Babel](https://babeljs.io/), [PostCSS](https://github.com/postcss/postcss-loader), [React Hot Loader 3](https://github.com/gaearon/react-hot-loader) and [Redux Devtools Extension](https://github.com/zalmoxisus/redux-devtools-extension).
 
 ## Goals
 
@@ -11,6 +11,7 @@ Starter boilerplate for creating your own  [universal](https://medium.com/@mjack
   * Client-side React component hot reloading
   * Server-side React component hot reloading
   * Server-side express routes hot reloading
+  * Resolve components asynchronously, with support for code splitting
   * Using mostly ES6 module syntax, except where dynamic loading is needed
   * Data fetching through a remote or local API
   * Multiple pages via Routing
