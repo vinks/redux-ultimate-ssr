@@ -10,7 +10,7 @@ import App from './layouts/App'
 const mountNode = document.getElementById('react-view')
 
 // Get any "rehydrate" state sent back by the server
-const rehydrateState = window.ASYNC_COMPONENTS_STATE
+const rehydrateState = window.__ASYNC_COMPONENTS_STATE__
 
 const app = (
   <AsyncComponentProvider rehydrateState={rehydrateState}>

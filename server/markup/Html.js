@@ -54,7 +54,7 @@ const Html = ({ store, appString, asyncState }) => {
         {/* Serialise the async state into the HTML response */}
         <script
           dangerouslySetInnerHTML={{
-            __html: asyncState && `window.ASYNC_COMPONENTS_STATE=${serialize(asyncState)};`
+            __html: asyncState && `window.__ASYNC_COMPONENTS_STATE__=${serialize(asyncState)};`
           }}
         />
 

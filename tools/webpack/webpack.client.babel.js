@@ -13,8 +13,9 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const Happypack = require('happypack')
 const WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin')
 const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./WIT.config')).development(isDev)
+const BabiliPlugin = require('babili-webpack-plugin')
 
-// Setting the plugins for development/prodcution
+// Setting the plugins for development/production
 const getPlugins = () => {
   // Common
   const plugins = [
@@ -87,7 +88,8 @@ const getPlugins = () => {
           screw_ie8: true,
           comments: false
         }
-      })
+      }),
+      new BabiliPlugin()
     )
   }
 

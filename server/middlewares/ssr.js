@@ -1,96 +1,73 @@
 import React from 'react'
 import { renderToString, renderToStaticMarkup } from 'react-dom/server'
-import { AsyncComponentProvider, createAsyncContext } from 'react-async-component' // 👈
+import { AsyncComponentProvider, createAsyncContext } from 'react-async-component'
 import asyncBootstrapper from 'react-async-bootstrapper'
 import { StaticRouter } from 'react-router-dom'
-import { matchRoutes } from 'react-router-config'
 import { Provider } from 'react-redux'
-import routes from '../../client/routes'
 import Html from '../markup/Html'
 import App from '../../client/layouts/App'
 import { store } from '../../client/misc'
 
 export default function(req, res) {
-  const renderHtml = (store, appString, asyncState) => {
+  // It's possible to disable SSR, which can be useful in development mode.
+  // In this case traditional client side only rendering will occur.
+  if (__DISABLE_SSR__) {
+    // SSR is disabled so we will return an "empty" html page and
+    // rely on the client to initialize and render the react application.
     const html = renderToStaticMarkup(
-      <Html
-        store={store}
-        appString={appString}
-        asyncState={asyncState}
-      />
+      <Html store={store} />
     )
 
-    return `<!doctype html>${html}`
-  }
-
-  // If __DISABLE_SSR__ = true, disable server side rendering
-  if (__DISABLE_SSR__) {
-    res.send(renderHtml(store))
+    res.status(200).send(`<!DOCTYPE html>${html}`)
 
     return
   }
 
-  // Load data on server-side
-  const loadBranchData = () => {
-    const branch = matchRoutes(routes, req.url)
+  // Create a context for our AsyncComponentProvider.
+  const asyncComponentsContext = createAsyncContext()
 
-    const promises = branch.map(({ route, match }) => {
-      // Dispatch the action(s) through the loadData method of "./routes.js"
-      if (route.loadData) {
-        return route.loadData(store.dispatch, match.params)
-      }
+  // Create a context for <StaticRouter>, which will allow us to
+  // query for the results of the render.
+  const reactRouterContext = {}
 
-      return Promise.resolve(null)
-    })
+  // Declare our React application.
+  const app = (
+    <AsyncComponentProvider asyncContext={asyncComponentsContext}>
+      <Provider store={store}>
+        <StaticRouter location={req.url} context={reactRouterContext}>
+          <App />
+        </StaticRouter>
+      </Provider>
+    </AsyncComponentProvider>
+  )
 
-    return Promise.all(promises)
-  }
+  // Pass our app into the react-async-component helper so that any async
+  // components are resolved for the render.
+  asyncBootstrapper(app).then(() => {
+    const appString = renderToString(app)
 
-  // Send response after all the action(s) are dispathed
-  loadBranchData()
-    .then(() => {
-      // Setup React-Router server-side rendering
-      const routerContext = {}
+    // Generate the html response.
+    const html = renderToStaticMarkup(
+      <Html
+        appString={appString}
+        asyncState={asyncComponentsContext.getState()}
+        store={store}
+      />
+    )
 
-      // Create the async context for our provider, this grants
-      // us the ability to tap into the state to send back to the client.
-      const asyncContext = createAsyncContext()
+    // Check if the router context contains a redirect, if so we need to set
+    // the specific status and redirect header and end the response.
+    if (reactRouterContext.url) {
+      res.status(302).setHeader('Location', reactRouterContext.url)
+      res.end()
 
-      const app = (
-        <AsyncComponentProvider asyncContext={asyncContext}>
-          <Provider store={store}>
-            <StaticRouter location={req.url} context={routerContext}>
-              <App />
-            </StaticRouter>
-          </Provider>
-        </AsyncComponentProvider>
-      )
+      return
+    }
 
-      // Check if the render result contains a redirect, if so we need to set
-      // the specific status and redirect header and end the response
-      if (routerContext.url) {
-        res.status(301).setHeader('Location', routerContext.url)
-        res.end()
-
-        return
-      }
-
-      // Checking is page is 404
-      const status = routerContext.status === '404' ? 404 : 200
-
-      asyncBootstrapper(app).then(() => {
-        // We can now render our app
-        const appString = renderToString(app)
-
-        // Get the async component state
-        const asyncState = asyncContext.getState()
-
-        // Pass the route and initial state into html template
-        res.status(status).send(renderHtml(store, appString, asyncState))
-      })
-    })
-    .catch(err => {
-      res.status(404).send('Not Found :(')
-      console.error(`==> 😭  Rendering routes error: ${err}`)
-    })
+    // If the renderResult contains a "missed" match then we set a 404 code.
+    // Our App component will handle the rendering of an Error404 view.
+    // Otherwise everything is all good and we send a 200 OK status.
+    res.status(reactRouterContext.missed ? 404 : 200)
+      .send(`<!DOCTYPE html>${html}`)
+  })
 }

@@ -15,7 +15,11 @@ export class Home extends PureComponent {
       list: null,
     },
     fetchUsersIfNeeded: () => {},
-  };
+  }
+
+  asyncBootstrap() {
+    this.props.fetchUsersIfNeeded()
+  }
 
   componentDidMount() {
     this.props.fetchUsersIfNeeded()
